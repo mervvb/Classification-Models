@@ -81,13 +81,6 @@ The initial dataset was unorganized, with all columns combined into a single col
 
 Then, I replaced the unknown values with the mode (most frequent value) of the respective column.
 I used the value_counts() function to count how many times each value appeared in the columns before and after I replaced the unknown values with the most common one (mode). This helped me see how the data changed.
-For ‘job’ , ‘marital’, ‘education’ column: 
-
- <p float="left">
-  <img src="image-19.png" width="300" />
-  <img src="image-20.png" width="300" />
-  <img src="image-21.png" width="300" />
-</p>
 
 After replacing the unknown values, I changed them to 'admin', 'married', and 'university degree'. The other values, like 'yes', 'no', and 'unknown', stayed as 'yes' or 'no’. This process was done to make the data more consistent and ready for analysis.
 I used one-hot encoding (OHE) to convert the categorical features in the dataset into numerical values. Specifically, I applied the pd.get_dummies() function to transform all categorical columns into binary columns, where each category is represented by a separate column with 1 indicating the presence of that category and 0 indicating its absence. After applying one-hot encoding, I used .astype(int) to convert the resulting columns from float type to integers, as machine learning models typically require binary values (0 or 1).
