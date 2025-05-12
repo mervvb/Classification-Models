@@ -8,17 +8,29 @@ So, I added sep=';' to correctly read the data. After importing the data, I used
  ![alt text](image.png)
 
 The table above shows the descriptive statistics for the numerical columns in the dataset. Here’s a basic explanation of what I observed:
+
 Count : Each column has 41,188 rows, meaning there are no missing values in these numerical features.
+
 Age: The average age is around 40 years. The youngest person is 17 and the oldest is 98. Most people are between 32 (25%) and 47 (75%).
+
 Duration (length of the last contact in seconds): Mean duration is 258 seconds (~4 minutes). The duration ranges from 0 to 4918 seconds, so there are some very long calls. The 0 value might mean the person didn’t talk or call wasn’t successful.
+
 Campaign (number of contacts during this campaign): People were contacted on average 2.56 times. Some people were contacted up to 56 times, which is very high and may affect results.
+
 Pdays (days since client was last contacted from a previous campaign): Most values are 999, which likely means the client was not contacted before. This column has a large standard deviation because of that.
+
 Previous (number of contacts before this campaign): On average, people were contacted 0.17 times, meaning many had no prior contact.
+
 emp.var.rate (employment variation rate): Values range from -3.4 to 1.4, and the average is close to 0. Negative values could mean an economic downturn.
+
 cons.price.idx (consumer price index): Values range from 92.2 to 94.76, with the average around 93.57.
+
 cons.conf.idx (consumer confidence index): All values are negative, which could show low confidence in the economy.
+
 euribor3m (Euro Interbank Offered Rate over 3 months): Mean value is 3.62, and it goes up to 5.04. This may affect people’s decisions on taking financial products.
+
 nr.employed (number of employees): The average is around 5167, with a small range from 4963 to 5228. This shows little variation in this economic indicator.
+
 To better understand the distribution of the numerical variables, I created plots for some of them. 
 
  <p float="left">
