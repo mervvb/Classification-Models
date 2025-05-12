@@ -4,6 +4,7 @@
 First, I started my analysis by loading the dataset into a Pandas DataFrame using the pd.read_csv() function. The dataset is called ‘bank-additional-full.csv’, and it uses a semicolon to separate values instead of a comma. 
 So, I added sep=';' to correctly read the data. After importing the data, I used data.columns to check all the column names and features that are available in the dataset.
  Next, I focused on the numerical features. I used describe() function:
+ 
  ![alt text](image.png)
 
 The table above shows the descriptive statistics for the numerical columns in the dataset. Here’s a basic explanation of what I observed:
@@ -28,48 +29,62 @@ To better understand the distribution of the numerical variables, I created plot
 In a binned histogram for the age column, and most of the values fall into the young adult category, showing that this group makes up the largest portion of the data.
 
 ![alt text](image-3.png)
+
 On the x-axis, we have the campaign response: "no" means the client did not subscribe. "yes" means the client did subscribe. The y-axis shows the values of euribor3m. The box shows the interquartile range (middle 50% of the data), and the line inside is the median. Clients who subscribed ("yes") generally had lower euribor3m values. The median euribor3m for those who said "yes" is much lower than for those who said "no". This may suggest that lower interest rates are associated with higher campaign success.
 
 ![alt text](image-4.png)
+
 When nr.employed is low, it usually reflects a worse economic situation. More people agreed to the campaign offer during that time according to boxplot. It may be that employment is low, people may be more open to secure savings options like term deposits, so more of them say 'yes' to the offer. 
 
 ![alt text](image-5.png)
+
 In the dataset, most of the ‘emp.var.rate’ values are the same, which is why we don’t clearly see a median for the ‘yes’ group. When the employment variation rate is high, people tend to say ‘no’ to the offer.
 
 ![alt text](image-6.png)
+
 When the consumer price index (CPI) goes up, people tend to say 'no' to the campaign. But because the median of the 'no' group is very high, the overall response doesn't change much. 
 
 ![alt text](image-7.png)
+
 In the age boxplot, the medians are close to each other, and the variations are similar. There are a few outliers.
 
 ![alt text](image-8.png)
+
 As the duration increases, people are more likely to say 'yes' to the campaign. This suggests that longer exposure or time leads to a higher acceptance rate of the campaign.
 
 Then, I focused on the categorical features:
 
 ![alt text](image-9.png)
+
 The dataset has the highest number of entries for May, June, July, and August. This could indicate that these months are periods of higher activity, possibly due to seasonal trends or specific events that occur during these months, leading to more data being collected or more responses being recorded. 
 
 ![alt text](image-10.png)
+
 The data for the days doesn't change much, and it looks similar across the different days.
 
 ![alt text](image-11.png)
+
 People with a cellular phone are more likely to say 'yes'. This might mean that having a mobile phone makes it easier for them to join or respond to campaigns.
 
 ![alt text](image-12.png)
+
 People with a university education have the highest rates of both 'yes' and 'no' responses. This suggests that university graduates show the most variety in their reactions, both positive and negative. After that, individuals with a high school or professional course education are more likely to say 'yes'.
 
 ![alt text](image-13.png)
+
 Married people have the highest number of both 'yes' and 'no' responses. This means they are the largest group, and they give many answers in both directions. After married people, single people also give many responses. They are more likely to say 'yes' than others, but they also have the second highest number of 'no' responses after married people.
 
 ![alt text](image-14.png)
+
 People who have not contacted before say 'yes' more, maybe because the campaign is new for them. People who had success before also say 'yes' often, because they had a good experience.
 
 To examine which factors are associated with the campaign outcome, I will analyze the correlation between the independent variables and the target variable 'y_yes'.
 
 ![alt text](image-15.png)
+
 There is a positive relationship between duration (the strongest), poutcome (success), and previous. This means that when the call duration is longer, when the previous outcome was successful, and when there was a previous contact, people are more likely to say 'yes' to the campaign. The variables 'nr.employed', 'pdays', and 'euribor3m' have the strongest negative correlations with the target variable 'y_yes'. This means that as these values increase, the likelihood of a person saying 'yes' to the campaign decreases. In other words, higher employment numbers, more days since last contact, and higher interest rates are associated with a lower chance of a positive response. 
 In short, as shown in the correlation map figure, 'duration', 'previous', and 'poutcome (success)' are positively correlated with 'y_yes', meaning longer call durations, previous success, and prior contact increase the likelihood of a positive response. In contrast, 'nr.employed', 'pdays', and 'euribor3m' are negatively correlated with 'y_yes', indicating that higher values in these variables decrease the chance of a positive response.
+
 ![alt text](image-16.png)
 
 ## 2.  DATA PREPROCESSING
@@ -86,26 +101,28 @@ After replacing the unknown values, I changed them to 'admin', 'married', and 'u
 I used one-hot encoding (OHE) to convert the categorical features in the dataset into numerical values. Specifically, I applied the pd.get_dummies() function to transform all categorical columns into binary columns, where each category is represented by a separate column with 1 indicating the presence of that category and 0 indicating its absence. After applying one-hot encoding, I used .astype(int) to convert the resulting columns from float type to integers, as machine learning models typically require binary values (0 or 1).
 Next, I removed certain columns from the resulting DataFrame that were no longer needed. These columns, such as default_no, housing_no, loan_no, and y_no, were generated during the one-hot encoding process and represented binary features. However, they were redundant, and I dropped them using the drop(columns=[...]) method. This step helped clean the data by eliminating unnecessary columns, leaving only the relevant features for further analysis or model training.
 
+### After Ohe
 ![After OHE](image-22.png)
 
 After this step, I separated the features (X) and the target variable (y) from the one-hot encoded data. I used ohe_data.iloc[:, 0:54] to select the first 54 columns, which contain the input data (features) that will be used to make predictions. These are the independent variables. Then, I used ohe_data.iloc[:, 54:] to select the remaining columns starting from the 54th column, which represent the target variable that we want to predict. By using .iloc, I was able to choose the specific columns based on their position in the data, where [0:54] gets the features and [54:] gets the target variable. This way, I split the data into the parts needed for training the model.
 
- <p float="left">
-  <img src="image-23.png" width="300" />
-  <img src="!image-24.png" width="300" />
-</p>
 
+### Imbalance Data
 ![alt text](image-25.png)
 
 To deal with the imbalance in the data, I used an under-sampling technique. The target variable (y_yes) had an unequal distribution of classes, where one class was much more frequent than the other. To fix this, I split the dataset into two groups based on the values of y_yes, class 0 (no) and class 1 (yes). Then, I took a random sample of class 0 to match the number of records in class 1, which helps make the dataset more balanced. After that, I combined the two classes (the down sampled class 0 and the original class 1) into a new dataset for training and testing. This way, the model can learn from both classes more equally, avoiding bias towards the larger class.
 I used the train_test_split() function to divide the data into training and testing sets, using 70% for training and 30% for testing. This helps the model learn from the balanced dataset and then test its performance on unseen data (Chachra, 2020).
 
 The StandardScaler is used to scale or normalize the data, especially when the features have different units or magnitudes. 
+
 Z = (X - μ) / σ
 	
 Where:
+
 X: is the original value of the feature
+
 μ: is the mean of the feature
+
 σ:  is the standard deviation of the feature
 
 ![After StandardScaler](image-26.png)
